@@ -24,17 +24,12 @@ class ToDoList extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    List<AddItem> items = [
-      AddItem('Styrketräning'),
-      AddItem('Boka resa'),
-      AddItem('Skriva färdigt uppsatsen'),
-      AddItem('Mata guldfiskarna'),
-      AddItem('Lösa programmeringsuppgiften'),
-      AddItem('Styrketräning'),
-      AddItem('Boka resa'),
-      AddItem('Skriva färdigt uppsatsen'),
-      AddItem('Mata guldfiskarna'),
-      AddItem('Mata guldfiskarna'),
+    List<TaskItem> items = [
+      TaskItem('Styrketräning'),
+      TaskItem('Boka resa'),
+      TaskItem('Skriva färdigt uppsatsen'),
+      TaskItem('Mata guldfiskarna'),
+      TaskItem('Lösa programmeringsuppgiften'),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +42,7 @@ class ToDoList extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
       body: SizedBox(
-        height: 575,
+        height: 700,
         child: ListView.builder(
           itemBuilder: (context, index) {
             //return _listItem(context, items[index]);

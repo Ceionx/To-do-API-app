@@ -1,6 +1,6 @@
-class AddItem {
+class TaskItem {
   String name; 
-  bool completed = false;
+  bool isComplete = false;
 
-  AddItem(this.name);
+  TaskItem(this.name);
 }
