@@ -1,10 +1,69 @@
 import 'package:flutter/material.dart';
-import 'add_item.dart';
-import 'list_item.dart';
-import 'add_item_view.dart';
+import 'home_page.dart';
+import 'task_item.dart';
+import 'package:provider/provider.dart';
+
+enum TaskFilter {
+  completed,
+  uncompleted,
+  all,
+}
+
+class MyState extends ChangeNotifier {
+  final List<TaskItem> _items = [
+      TaskItem(taskName: 'Styrketräning', isComplete: true),
+      TaskItem(taskName: 'Boka resa', isComplete: true),
+      TaskItem(taskName: 'Skriva färdigt uppsatsen', isComplete: false),
+      TaskItem(taskName: 'Mata guldfiskarna', isComplete: false),
+      TaskItem(taskName: 'Lösa programmeringsuppgiften', isComplete: false),
+      TaskItem(taskName: 'Mata guldfiskarna', isComplete: false),
+      TaskItem(taskName: 'Lösa programmeringsuppgiften', isComplete: false),
+    ];
+
+  TaskFilter selectedFilter = TaskFilter.all;
+
+  List<TaskItem> get filteredItems {
+    if (selectedFilter == TaskFilter.completed) {
+      return _items.where((item) => item.isComplete).toList();
+    } else if (selectedFilter == TaskFilter.uncompleted) {
+      return _items.where((item) => !item.isComplete).toList();
+    } else {
+      return _items;
+    }
+  }
+
+  void setFilter(TaskFilter filter) {
+    selectedFilter = filter;
+    notifyListeners();
+  }
+
+  void taskUpdated(int index) {
+    int itemIndex = _items.indexOf(filteredItems[index]);
+    _items[itemIndex].isComplete = !_items[itemIndex].isComplete;
+    notifyListeners();
+  }
+
+  void addTask(String name) {
+    if (name != '') {_items.add(TaskItem(taskName: name, isComplete: false));}
+    notifyListeners();
+  }
+
+  void deleteTask(int index) {
+    int itemIndex = _items.indexOf(filteredItems[index]);
+    _items.removeAt(itemIndex);
+    notifyListeners();
+  }  
+}
 
 void main() {
-  runApp(MyApp());
+  MyState state = MyState();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => state,
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,62 +73,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-      useMaterial3: true,),
-      home: ToDoList());
-  }
-}
-
-class ToDoList extends StatelessWidget {
-  const ToDoList({super.key});
-  
-  @override
-  Widget build(BuildContext context) {
-    List<TaskItem> items = [
-      TaskItem('Styrketräning'),
-      TaskItem('Boka resa'),
-      TaskItem('Skriva färdigt uppsatsen'),
-      TaskItem('Mata guldfiskarna'),
-      TaskItem('Lösa programmeringsuppgiften'),
-    ];
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Expanded(child: Text('To-Do listan')),
-            Icon(Icons.menu),
-          ],
-        ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-      body: SizedBox(
-        height: 700,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            //return _listItem(context, items[index]);
-            return ListItem(items[index]);
-          },
-          itemCount: items.length,
-        ),
+      useMaterial3: true,
       ),
-      floatingActionButton: _addItemButton(context)
-      );
-  }
-
-  Widget _addItemButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-              width: 275,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
-                },
-                tooltip: 'Lägg till ny uppgift',
-                child: Text('Lägg till en ny uppgift'),
-              ),
-            ),
-      ],
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(),
     );
-    }
+  }
 }
