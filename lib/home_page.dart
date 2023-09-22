@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './main.dart';
 import './task_item.dart';
-import 'add_item_view.dart';
+import './add_item_view.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //var items = context.watch<MyState>().items;
     var filteredItems = context.watch<MyState>().filteredItems;
 
     return Scaffold(
@@ -48,9 +47,8 @@ class MyHomePage extends StatelessWidget {
           itemCount: filteredItems.length,
           itemBuilder: (context, index) {
             return TaskItem(
-              taskName: filteredItems[index].taskName,
-              isComplete: filteredItems[index].isComplete,
-              onChanged: (value) {context.read<MyState>().taskUpdated(index);
+              task: filteredItems[index],
+              onChanged: (value) {context.read<MyState>().updateTask(index, filteredItems[index]);
             },
             onDelete: () {
               context.read<MyState>().deleteTask(index);

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import './api.dart';
 
+// ignore: must_be_immutable
 class TaskItem extends StatelessWidget {
-  final String taskName; 
-  bool isComplete;
+  final ApiTask task;
   Function(bool?)? onChanged;
   Function()? onDelete;
 
   TaskItem({
     super.key,
-    required this.taskName, 
-    required this.isComplete, 
+    required this.task, 
     this.onChanged,
     this.onDelete,
-    });
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +25,10 @@ class TaskItem extends StatelessWidget {
           ),
         child: Row(
           children: [
-            Checkbox(value: isComplete, onChanged: (value) {onChanged?.call(value);},
+            Checkbox(value: task.isComplete, onChanged: (value) {onChanged?.call(value);},
             ),
             Expanded(
-              child: Text(taskName, style: TextStyle(fontSize: 18, decoration: isComplete ? TextDecoration.lineThrough : TextDecoration.none),
+              child: Text(task.taskName, style: TextStyle(fontSize: 18, decoration: task.isComplete ? TextDecoration.lineThrough : TextDecoration.none),
               ),
             ),
             IconButton(icon: Icon(Icons.remove_circle_outline, color: Colors.red),
