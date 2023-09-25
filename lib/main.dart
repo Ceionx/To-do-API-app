@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
-import 'task_item.dart';
 import 'package:provider/provider.dart';
+import './api.dart';
+import './home_page.dart';
 
 enum TaskFilter {
   completed,
@@ -10,19 +10,64 @@ enum TaskFilter {
 }
 
 class MyState extends ChangeNotifier {
-  final List<TaskItem> _items = [
-      TaskItem(taskName: 'Styrketräning', isComplete: true),
-      TaskItem(taskName: 'Boka resa', isComplete: true),
-      TaskItem(taskName: 'Skriva färdigt uppsatsen', isComplete: false),
-      TaskItem(taskName: 'Mata guldfiskarna', isComplete: false),
-      TaskItem(taskName: 'Lösa programmeringsuppgiften', isComplete: false),
-      TaskItem(taskName: 'Mata guldfiskarna', isComplete: false),
-      TaskItem(taskName: 'Lösa programmeringsuppgiften', isComplete: false),
-    ];
+  List<ApiTask> _items = [];
+
+  List<ApiTask> get items => _items;
+
+  MyState() {     // Fetch the list at start-up
+    fetchList();
+  }
+
+  void fetchList() async {    // Fetch the list from API and update _items list
+    var items = await apiGetList();
+    _items = items;
+    notifyListeners();
+  }
+
+  void updateTask(int index, ApiTask task) async {    // Checking/unchecking the checkboxes of tasks
+    int itemIndex = _items.indexOf(filteredItems[index]);
+    var itemID = _items[itemIndex].id;
+    await apiUpdateTask(task, itemID);
+    fetchList();
+  }
+
+  void addTask(ApiTask task, name) async {    // Adding tasks
+    await apiAddTask(task, name);
+    fetchList();
+  }
+
+  void deleteTask(int index) async {    // Removing tasks
+    int itemIndex = _items.indexOf(filteredItems[index]);
+    var itemID = _items[itemIndex].id;
+    await apiDeleteTask(itemID);
+    fetchList();
+  }
+
+  Widget alertButton(context) {   // Pop-up window when user doesn't give any input in TextField
+    Widget confirmButton = TextButton(child: Text('Ok'),
+      onPressed: () => Navigator.pop(context, )
+      ,);
+    AlertDialog alert = AlertDialog(
+      title: Text('Felmeddelande'),
+      content: Text('Du måste fylla i en text för uppgiften.'),
+      actions: [
+        confirmButton,
+      ],
+    );
+    showDialog(context: context, builder: (BuildContext context){return alert;});
+    return alert;
+  }
+
+  // Filtering tasks by completed, uncompleted or show all
 
   TaskFilter selectedFilter = TaskFilter.all;
+  
+  void setFilter(TaskFilter filter) {
+      selectedFilter = filter;
+      notifyListeners();
+    }
 
-  List<TaskItem> get filteredItems {
+  List<ApiTask> get filteredItems {
     if (selectedFilter == TaskFilter.completed) {
       return _items.where((item) => item.isComplete).toList();
     } else if (selectedFilter == TaskFilter.uncompleted) {
@@ -32,28 +77,9 @@ class MyState extends ChangeNotifier {
     }
   }
 
-  void setFilter(TaskFilter filter) {
-    selectedFilter = filter;
-    notifyListeners();
-  }
-
-  void taskUpdated(int index) {
-    int itemIndex = _items.indexOf(filteredItems[index]);
-    _items[itemIndex].isComplete = !_items[itemIndex].isComplete;
-    notifyListeners();
-  }
-
-  void addTask(String name) {
-    if (name != '') {_items.add(TaskItem(taskName: name, isComplete: false));}
-    notifyListeners();
-  }
-
-  void deleteTask(int index) {
-    int itemIndex = _items.indexOf(filteredItems[index]);
-    _items.removeAt(itemIndex);
-    notifyListeners();
-  }  
 }
+
+  // Main Code
 
 void main() {
   MyState state = MyState();
