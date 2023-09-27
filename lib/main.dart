@@ -36,16 +36,40 @@ class MyState extends ChangeNotifier {
     fetchList();
   }
 
-  void deleteTask(int index) async {    // Removing tasks
+  void deleteTask(int index, context) async {    // Removing tasks
     int itemIndex = _items.indexOf(filteredItems[index]);
     var itemID = _items[itemIndex].id;
     await apiDeleteTask(itemID);
+    Navigator.pop(context);
     fetchList();
   }
 
-  Widget alertButton(context) {   // Pop-up window when user doesn't give any input in TextField
+  Widget deleteAlertButton(context, index, taskName) {
+    Widget confirmButton = TextButton(child: Text('Ja'),
+    onPressed: () => deleteTask(index, context));
+    Widget cancelButton = TextButton(child: Text('Ångra'),
+    onPressed: () => Navigator.pop(context));
+    AlertDialog alert = AlertDialog(
+      title: Text('Radera uppgift'),
+      content: Text('Är du säker på att du vill ta bort uppgiften:\n- $taskName?'),
+      actions: [
+        Row(children: [
+          Padding(
+            padding: EdgeInsets.only(left: 10, right: 115),
+            child: confirmButton,
+              ),
+            cancelButton,
+        ]
+        ),
+      ]
+    );
+    showDialog(context: context, builder: (BuildContext context){return alert;});
+    return alert;
+  }
+
+  Widget textAlertButton(context) {   // Pop-up window when user doesn't give any input in TextField
     Widget confirmButton = TextButton(child: Text('Ok'),
-      onPressed: () => Navigator.pop(context, )
+      onPressed: () => Navigator.pop(context)
       ,);
     AlertDialog alert = AlertDialog(
       title: Text('Felmeddelande'),

@@ -51,7 +51,7 @@ class MyHomePage extends StatelessWidget {
               onChanged: (value) {context.read<MyState>().updateTask(index, filteredItems[index]);
             },
             onDelete: () {
-              context.read<MyState>().deleteTask(index);
+              context.read<MyState>().deleteAlertButton(context, index, filteredItems[index].taskName);
             },
           );
         },

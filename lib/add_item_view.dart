@@ -43,7 +43,7 @@ class AddItemView extends StatelessWidget {
               context.read<MyState>().addTask(task, addTaskController.text);
               Navigator.pop(context);}
               else {
-                context.read<MyState>().alertButton(context);
+                context.read<MyState>().textAlertButton(context);
               }
             }, 
           icon: Icon(Icons.add))
