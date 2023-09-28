@@ -24,19 +24,19 @@ class ApiTask {
       );
     }
 
-      bool isImportant = titleParts[1].trim() == 'true';
-      bool isOneTime = titleParts[2].trim() == 'true';
-      bool isWeekly = titleParts[3].trim() == 'true';
+    bool isImportant = titleParts[1].trim() == 'true';
+    bool isOneTime = titleParts[2].trim() == 'true';
+    bool isWeekly = titleParts[3].trim() == 'true';
 
-      return ApiTask(
-        titleParts[0].trim(),
-        json['done'],
-        isImportant,
-        isOneTime,
-        isWeekly,
-        json['id'],
-      );
-    }
+    return ApiTask(
+      titleParts[0].trim(),
+      json['done'],
+      isImportant,
+      isOneTime,
+      isWeekly,
+      json['id'],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

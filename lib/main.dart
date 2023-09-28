@@ -110,14 +110,12 @@ class MyState extends ChangeNotifier {
 
   Widget textAlertButton(context) {   // Pop-up window when user doesn't give any input in TextField
     Widget confirmButton = TextButton(child: Text('Ok'),
-      onPressed: () => Navigator.pop(context)
-      ,);
+      onPressed: () => Navigator.pop(context),
+      );
     AlertDialog alert = AlertDialog(
       title: Text('Felmeddelande'),
       content: Text('Du måste fylla i en text för uppgiften.'),
-      actions: [
-        confirmButton,
-      ],
+      actions: [confirmButton],
     );
     showDialog(context: context, builder: (BuildContext context){return alert;});
       return alert;
@@ -141,18 +139,12 @@ class MyState extends ChangeNotifier {
       return taskTypeItems.map((item) {
         return TaskItem(
           task: item,
-          onChanged: (value) {
-            updateTask(item); 
-          },
-          onDelete: () {
-            deleteAlertButton(context, item, item.taskName);
-          },
+          onChanged: (value) {updateTask(item);},
+          onDelete: () {deleteAlertButton(context, item, item.taskName);},
         );
       }
     ).toList();
   }
-
-  // Filtering tasks by completed, uncompleted or show all
 
   TaskFilter selectedFilter = TaskFilter.all;
   
@@ -166,11 +158,8 @@ class MyState extends ChangeNotifier {
       return _items.where((item) => item.isComplete).toList();
     } else if (selectedFilter == TaskFilter.uncompleted) {
       return _items.where((item) => !item.isComplete).toList();
-    } else {
-      return _items;
-    }
+    } else {return _items;}
   }
-
 }
 
   // Main Code

@@ -34,12 +34,11 @@ class TaskItem extends StatelessWidget {
           children: [
             Checkbox(value: task.isComplete, onChanged: (value) {onChanged?.call(value);},
             ),
-            Expanded(
-              child: Text(task.taskName, style: TextStyle(fontSize: 14, decoration: task.isComplete ? TextDecoration.lineThrough : TextDecoration.none),
+            Expanded(child: Text(task.taskName, style: TextStyle(fontSize: 14, decoration: task.isComplete ? TextDecoration.lineThrough : TextDecoration.none),
               ),
             ),
             IconButton(icon: Icon(Icons.remove_circle_outline, color: Colors.red),
-            onPressed: onDelete,
+              onPressed: onDelete,
             ),
           ],
         ),

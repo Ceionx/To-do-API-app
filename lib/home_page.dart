@@ -16,8 +16,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Expanded(
-              child: Text('Att göra-listan'),
+            Expanded(child: Text('Att göra-listan'),
             ),
             PopupMenuButton<TaskFilter>(
               onSelected: (TaskFilter choice) {
@@ -82,8 +81,7 @@ Widget _addItemButton(BuildContext context) {
       SizedBox(
         width: 275,
         child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
+          onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
           },
           tooltip: 'Lägg till ny uppgift',
           child: Text('Lägg till en ny uppgift'),

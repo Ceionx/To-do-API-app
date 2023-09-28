@@ -42,7 +42,7 @@ class AddItemView extends StatelessWidget {
                     if (states.contains(MaterialState.selected)) {
                       return Icon(Icons.check);
                     }
-                    return Icon(Icons.close);
+                      return Icon(Icons.close);
                   },
                 ),
                 ),
@@ -57,13 +57,14 @@ class AddItemView extends StatelessWidget {
               children: [
                 Switch(value: weeklyTask, onChanged: importantTask ? null : (bool value) {
                   context.read<MyState>().toggleWeeklyTask(value);
-                  },
+                },
                   thumbIcon: MaterialStateProperty.resolveWith<Icon?>((Set<MaterialState> states) {
                     if (states.contains(MaterialState.selected)) {
                       return Icon(Icons.event_repeat);
                     }
                     return Icon(Icons.looks_one);
-                  },)
+                  },
+                  ),
                 ),
                 if(!weeklyTask) Text("Engångs-uppgift", style: TextStyle(fontSize: 14),
                   ),
@@ -93,17 +94,6 @@ class AddItemView extends StatelessWidget {
               ),
             ],
           ),
-          /*IconButton(color: Theme.of(context).colorScheme.inversePrimary, iconSize: 52, 
-            onPressed: () async {
-              if (addTaskController.text != '') 
-              {ApiTask task = ApiTask(addTaskController.text, false, importantTask, oneTimeTask, weeklyTask);
-              context.read<MyState>().addTask(task, addTaskController.text);
-              Navigator.pop(context);}
-              else {
-                context.read<MyState>().textAlertButton(context);
-                }
-            }, 
-              icon: Icon(Icons.add))*/
           ]
           ),
         ),
@@ -111,21 +101,3 @@ class AddItemView extends StatelessWidget {
     );
   }
 }
-
-/*Widget _addItemButton(BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      SizedBox(
-        width: 275,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
-          },
-          tooltip: 'Lägg till ny uppgift',
-          child: Text('Lägg till en ny uppgift'),
-        ),
-      ),
-    ],
-  );
-}*/
