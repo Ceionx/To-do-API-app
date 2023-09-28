@@ -2,26 +2,45 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 const String ENDPOINT = 'https://todoapp-api.apps.k8s.gu.se/todos';
-const String KEY = '?key=2e55d5dd-fa72-4093-9582-f85b124e893b';
+const String KEY = '?key=e52bba1f-a6ba-4d46-8dc9-159681239f67';
 
 class ApiTask {
   String taskName;
   bool isComplete;
+  bool? isImportant;
+  bool? isOneTime;
+  bool? isWeekly;
   String? id;
 
-  ApiTask(this.taskName, this.isComplete, [this.id]);
+  ApiTask(this.taskName, this.isComplete, [this.isImportant, this.isOneTime, this.isWeekly, this.id]);
 
   factory ApiTask.fromJson(Map<String, dynamic> json) {
-    return ApiTask( 
-      json['title'], 
-      json['done'] ?? false,
-      json['id']
-    );
-  }
+    List<String> titleParts = (json['title'] as String).split('|');
+    
+    if (titleParts.length == 1) {
+      return ApiTask(
+        titleParts[0].trim(),
+        json['done'],
+      );
+    }
+
+      bool isImportant = titleParts[1].trim() == 'true';
+      bool isOneTime = titleParts[2].trim() == 'true';
+      bool isWeekly = titleParts[3].trim() == 'true';
+
+      return ApiTask(
+        titleParts[0].trim(),
+        json['done'],
+        isImportant,
+        isOneTime,
+        isWeekly,
+        json['id'],
+      );
+    }
 
   Map<String, dynamic> toJson() {
     return {
-      "title": taskName,
+      "title": '$taskName|${isImportant ?? false}|${isOneTime ?? false}|${isWeekly ?? false}',
       "done": isComplete,
       "id": id,
     };

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './main.dart';
-import './task_item.dart';
 import './add_item_view.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -9,7 +8,9 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var filteredItems = context.watch<MyState>().filteredItems;
+    var importantCount = context.watch<MyState>().importantCount;
+    var weeklyCount = context.watch<MyState>().weeklyCount;
+    var oneTimeCount = context.watch<MyState>().oneTimeCount;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,41 +42,54 @@ class MyHomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SizedBox(
+      body: Container(
         height: 700,
-        child: ListView.builder(
-          itemCount: filteredItems.length,
-          itemBuilder: (context, index) {
-            return TaskItem(
-              task: filteredItems[index],
-              onChanged: (value) {context.read<MyState>().updateTask(index, filteredItems[index]);
-            },
-            onDelete: () {
-              context.read<MyState>().deleteAlertButton(context, index, filteredItems[index].taskName);
-            },
-          );
-        },
-          ),
+        color: Colors.amber[50],
+        child: ListView(
+          children: [
+            ExpansionTile(
+              backgroundColor: Colors.amber[50],
+              collapsedBackgroundColor: Colors.amber[200],
+              initiallyExpanded: true,
+              title: Text('$importantCount Viktiga uppgifter', style: TextStyle(decoration: TextDecoration.underline)),
+              children: context.watch<MyState>().buildTaskItems(context, TaskType.important),
+            ),
+            ExpansionTile(
+              backgroundColor: Colors.amber[50],
+              collapsedBackgroundColor: Colors.amber[200],
+              initiallyExpanded: true,
+              title: Text('$oneTimeCount Engångs-uppgifter', style: TextStyle(decoration: TextDecoration.underline)),
+              children: context.watch<MyState>().buildTaskItems(context, TaskType.oneTime),
+            ),
+            ExpansionTile(
+              backgroundColor: Colors.amber[50],
+              collapsedBackgroundColor: Colors.amber[200],
+              initiallyExpanded: true,
+              title: Text('$weeklyCount Återkommande uppgifter', style: TextStyle(decoration: TextDecoration.underline)),
+              children: context.watch<MyState>().buildTaskItems(context, TaskType.weekly),
+            ),
+          ],
+        ),
       ),
     floatingActionButton: _addItemButton(context)
   );
 }
 
-  Widget _addItemButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 275,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
-            },
-            tooltip: 'Lägg till ny uppgift',
-            child: Text('Lägg till en ny uppgift'),
-          ),
+Widget _addItemButton(BuildContext context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      SizedBox(
+        width: 275,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemView()));
+          },
+          tooltip: 'Lägg till ny uppgift',
+          child: Text('Lägg till en ny uppgift'),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }
