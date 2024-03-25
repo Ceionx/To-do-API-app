@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './main.dart';
+import './provider.dart';
 import './api.dart';
 
 class AddItemView extends StatelessWidget {
   const AddItemView({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     final addTaskController = TextEditingController();
@@ -80,14 +80,14 @@ class AddItemView extends StatelessWidget {
                 width: 150,
                 child: FloatingActionButton(
                   onPressed: () async {
-                    if (addTaskController.text != '') 
+                    if (addTaskController.text != '')
                     {ApiTask task = ApiTask(addTaskController.text, false, importantTask, oneTimeTask, weeklyTask);
                     context.read<MyState>().addTask(task, addTaskController.text);
                     Navigator.pop(context);}
                     else {
                       context.read<MyState>().textAlertButton(context);
                       }
-                  }, 
+                  },
                   tooltip: 'Skapa uppgiften',
                   child: Text('Skapa uppgiften'),
                 ),
